@@ -1,0 +1,67 @@
+Thermal Anomaly Detection API - Sample Data Demonstration
+Demonstration date/time: 2026-11-10T22:32:25+05:30
+API base URL: http://127.0.0.1:8000
+
+Final API counts after the second loader run:
+Assets: 3
+Inspections: 3
+Open alerts: 2
+CRITICAL alerts: 1
+WARNING alerts: 1
+
+Alerts returned by GET /alerts/open:
+ID 1 | asset BLR-02 | CRITICAL | max temperature 118.4 C | inspection 2
+ID 2 | asset MTR-07 | WARNING | max temperature 76.0 C | inspection 3
+
+Actual API verification:
+GET /assets returned 3 assets.
+GET /assets/{asset_id}/inspections returned 3 inspections in total.
+GET /alerts/open returned 2 open alerts.
+Alerts matched outcomes computed from sample data and API asset limits: 2 of 2.
+BLR-01: API maximum temperature 71.2 C; computed result: no alert.
+BLR-02: API maximum temperature 118.4 C; computed result: CRITICAL alert.
+MTR-07: API maximum temperature 76.0 C; computed result: WARNING alert.
+
+Repeat-load verification:
+The second loader run completed successfully.
+Asset, inspection, and alert IDs were unchanged between runs.
+Duplicate assets were skipped only after matching API data was confirmed.
+Duplicate inspections were handled by the API idempotency response.
+No records were deleted or overwritten.
+
+Database and source-file checks:
+All four tables exist: assets, inspections, alerts, alert_acknowledgement_history.
+Database counts (assets/inspections/alerts): {'assets': 3, 'inspections': 3, 'alerts': 2}.
+sample_data.json remained byte-for-byte unchanged (SHA256 c96b72bbb02bc79bebf257adc784e3eebf3fe5773509934ffba73c24535f1b32).
+
+Loader run 1 output:
+Loading asset BLR-01 (1/3)...
+  Created asset BLR-01.
+Loading asset BLR-02 (2/3)...
+  Created asset BLR-02.
+Loading asset MTR-07 (3/3)...
+  Created asset MTR-07.
+Loading inspection for BLR-01 (1/3)...
+  Created inspection 1.
+Loading inspection for BLR-02 (2/3)...
+  Created inspection 2.
+Loading inspection for MTR-07 (3/3)...
+  Created inspection 3.
+Sample-data loading completed.
+
+Loader run 2 output:
+Loading asset BLR-01 (1/3)...
+  Asset BLR-01 already exists with matching data; left unchanged.
+Loading asset BLR-02 (2/3)...
+  Asset BLR-02 already exists with matching data; left unchanged.
+Loading asset MTR-07 (3/3)...
+  Asset MTR-07 already exists with matching data; left unchanged.
+Loading inspection for BLR-01 (1/3)...
+  Matching inspection already exists (ID 1); left unchanged.
+Loading inspection for BLR-02 (2/3)...
+  Matching inspection already exists (ID 2); left unchanged.
+Loading inspection for MTR-07 (3/3)...
+  Matching inspection already exists (ID 3); left unchanged.
+Sample-data loading completed.
+
+Results are based on actual REST API responses and read-only database checks; no screenshots were fabricated.
